@@ -197,12 +197,12 @@
   <script>
     const SUPABASE_URL = 'https://gimojoesgqairppcwhiu.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpbW9qb2VzZ3FhaXJwcGN3aGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTI2MjYsImV4cCI6MjA5NDgyODYyNn0.7gAxCNGC8PkbZDYmBl0gQDMJjXB8siobjXyoZ_YwyDw';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let items = [];
 
     async function loadItems() {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('shopping_items')
         .select('*')
         .order('created_at', { ascending: true });
@@ -265,7 +265,7 @@
       if (!text) return;
       input.value = '';
       input.focus();
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('shopping_items')
         .insert({ text, checked: false })
         .select()
@@ -277,7 +277,7 @@
     }
 
     async function toggle(id, currentChecked) {
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .update({ checked: !currentChecked })
         .eq('id', id);
@@ -289,7 +289,7 @@
     }
 
     async function remove(id) {
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .delete()
         .eq('id', id);
@@ -301,7 +301,7 @@
 
     async function clearChecked() {
       const checkedIds = items.filter(i => i.checked).map(i => i.id);
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .delete()
         .in('id', checkedIds);
